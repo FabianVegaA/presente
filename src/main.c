@@ -16,8 +16,12 @@ int main(int argc, char const *argv[]){
     SetTargetFPS(60);
 
     // Initialize level and fill randomly
-    level *lvl = level_new(50,40);
-    level_fill_random(lvl,6);
+    level *lvl = level_new(SIZE_X,SIZE_Y);
+     
+    //Do create a noise map for get a level random on where iterate and apply the rules of birth and death of walls
+    noise_map(lvl, 0.6);
+    //Apply the rules
+    doIterations(lvl, 5, 4, 5);
 
     // Initialize state (and add enemies)
     state *sta = state_new();
