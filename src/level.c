@@ -86,32 +86,36 @@ void level_fill_random(level *lvl, int wall_size)
     }
 }
 
-void noise_map(level *lvl, float chanceToStartAlive){
+void noise_map(level *lvl, float chanceToStartAlive)
+{
     srand(getpid());
-    
-    for(int x = 0; x < lvl->size_y; x++){
-        for(int y = 0; y < lvl->size_x; y++){
+
+    for (int x = 0; x < lvl->size_y; x++)
+    {
+        for (int y = 0; y < lvl->size_x; y++)
+        {
             float random = rand() % 100;
-            if(random/100 < chanceToStartAlive){
+            if (random / 100 < chanceToStartAlive)
+            {
                 lvl->cells[x][y] = '#';
             }
         }
-    }  
+    }
 }
 
 void doIterations(level *lvl, int numberOfSteps, int birthLimit, int deathLimit)
 {
-    if(numberOfSteps > 0){
+    if (numberOfSteps > 0)
+    {
         for (int iter = 0; iter < numberOfSteps; iter++)
-        {     
+        {
             doSimulationStep(lvl, birthLimit, deathLimit);
         }
     }
-
 }
 
 void doSimulationStep(level *lvl, int birthLimit, int deathLimit)
-{   
+{
     // Initialize new level
     level *new_lvl = level_new(lvl->size_x, lvl->size_y);
     int neighbour;
@@ -123,34 +127,44 @@ void doSimulationStep(level *lvl, int birthLimit, int deathLimit)
         {
             neighbour = countAliveNeighbours(lvl, x, y);
 
-            if(lvl->cells[x][y] == '#'){
-                if(neighbour < deathLimit){
+            if (lvl->cells[x][y] == '#')
+            {
+                if (neighbour < deathLimit)
+                {
                     new_lvl->cells[x][y] = '#';
                 }
-                else{
+                else
+                {
                     new_lvl->cells[x][y] = '.';
                 }
             }
-            else{
-                if(neighbour < birthLimit){
+            else
+            {
+                if (neighbour < birthLimit)
+                {
                     new_lvl->cells[x][y] = '.';
                 }
-                else{
+                else
+                {
                     new_lvl->cells[x][y] = '#';
                 }
             }
         }
     }
+
     // Changes are transferred to level
     CopyPaste(lvl, new_lvl);
-    
+
     // Free new_level of the memory
     level_free(new_lvl);
 }
 
-void CopyPaste(level *lvl, level *new_lvl){
-    for (int i = 0; i < new_lvl->size_y; i++){
-        for (int j = 0; j < new_lvl->size_x; j++){
+void CopyPaste(level *lvl, level *new_lvl)
+{
+    for (int i = 0; i < new_lvl->size_y; i++)
+    {
+        for (int j = 0; j < new_lvl->size_x; j++)
+        {
             lvl->cells[i][j] = new_lvl->cells[i][j];
         }
     }
@@ -167,9 +181,9 @@ int countAliveNeighbours(level *lvl, int x, int y)
         {
             //This searching in his eights neighbour
             //The edges of the level isn't taken into account
-            if (x + dir_x <= lvl->size_x && x + dir_x >= 0 && y + dir_y <= lvl->size_y && y + dir_y >= 0)
+            if (x + dir_x < lvl->size_y && x + dir_x > 0 && y + dir_y < lvl->size_x && y + dir_y > 0)
             {
-                if (lvl->cells[x + dir_x][y + dir_y] == '#')
+                if (lvl->cells[x + dir_x][y + dir_y] == '#' && dir_x != 0 && dir_y != 0)
                 {
                     neighbour += 1;
                 }

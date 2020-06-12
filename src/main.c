@@ -21,7 +21,7 @@ int main(int argc, char const *argv[]){
     //Do create a noise map for get a level random on where iterate and apply the rules of birth and death of walls
     noise_map(lvl, 0.6);
     //Apply the rules
-    doIterations(lvl, 5, 4, 5);
+    doIterations(lvl, 10, 5, 3);
 
     // Initialize state (and add enemies)
     state *sta = state_new();
